@@ -16,18 +16,18 @@ def select_path_save():
     label_path_folder_save.config(text=path_folder_save)
 
 
-def resize_image():
+def resize_image_report():
     width = int(width_entry.get())
     height = int(height_entry.get())
 
     files = os.listdir(path_folder_image)
     total_files = len(files)
 
-    progress_label.config(text=f'Redimensionando imagens...')
+    progress_label.config(text=f'Redimensionando imagens para relatórios')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
-        if file.endswith(".png"):
+        if file.endswith(".jpg") or file.endswith(".png"):
             images = Image.open(os.path.join(path_folder_image, file))
             images = images.resize((width, height))
             images.convert('RGB').save(os.path.join(
@@ -37,19 +37,42 @@ def resize_image():
             text=f'Redimensionando imagem {image+1}/{total_files}')
         window.update()
 
-    progress_label.config(text=f'Redimensionamento concluído!')
+    progress_label.config(text=f'Redimensionamento relatórios concluído!')
+
+
+def resize_image_ipad():
+    width = int(width_entry.get())
+    height = int(height_entry.get())
+
+    files = os.listdir(path_folder_image)
+    total_files = len(files)
+
+    progress_label.config(text=f'Redimensionando imagens para Ipad')
+    progress_bar.config(maximum=total_files)
+
+    for image, file in enumerate(files):
+        if file.endswith(".png"):
+            images = Image.open(os.path.join(path_folder_image, file))
+            images = images.resize((width, height))
+            images.save(os.path.join(path_folder_save, file))
+        progress_bar.step(1)
+        progress_label.config(
+            text=f'Redimensionando imagem {image+1}/{total_files}')
+        window.update()
+
+    progress_label.config(text=f'Redimensionamento Ipad concluído!')
 
 
 # Create screen
 window = Tk()
 window.iconphoto(False, PhotoImage(file='./icons/icon-app.png'))
 window.title('CM Otimiza - BETA')
-window.geometry('500x500')
+window.geometry('500x550')
 window.resizable(False, False)
 
 # Variables
 ipadding = {'ipadx': 3, 'ipady': 3}
-padd_button = {'padx': 50, 'pady': 5}
+padd_button = {'padx': 30, 'pady': 5}
 
 # Fonts
 font_bold = font.Font(
@@ -72,7 +95,7 @@ btn_path_image = Button(
     command=select_path_image
 )
 
-btn_path_image.pack(**ipadding, padx=50, pady=(15, 5), fill='x')
+btn_path_image.pack(**ipadding, padx=30, pady=(15, 5), fill='x')
 
 # Label folder images
 label_path_folder_image = Label(
@@ -128,10 +151,22 @@ height_entry.pack(**ipadding, **padd_button)
 btn_resize = Button(
     window,
     image=icon_resize,
-    text='  Redimensionar',
+    text='  Redimensionar para Relatórios',
     font=font_bold,
     compound='left',
-    command=resize_image
+    command=resize_image_report
+)
+
+btn_resize.pack(**ipadding, **padd_button, fill='x')
+
+# Button resize ipad
+btn_resize = Button(
+    window,
+    image=icon_resize,
+    text='  Redimensionar para Ipad',
+    font=font_bold,
+    compound='left',
+    command=resize_image_ipad
 )
 
 btn_resize.pack(**ipadding, **padd_button, fill='x')
@@ -141,7 +176,12 @@ progress_bar = ttk.Progressbar(window, orient='horizontal')
 progress_bar.pack(**padd_button, fill='x')
 
 # Progress label
-progress_label = Label(window, text='')
+progress_label = Label(
+    window,
+    text='',
+    fg='green',
+    font=font_bold
+)
 progress_label.pack(**ipadding, **padd_button)
 
 # Button exit
