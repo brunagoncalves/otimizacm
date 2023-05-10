@@ -67,7 +67,7 @@ def resize_image_ipad():
 window = Tk()
 window.iconphoto(False, PhotoImage(file='./icons/icon-app.png'))
 window.title('CM Otimiza - BETA')
-window.geometry('500x550')
+window.geometry('500x580')
 window.resizable(False, False)
 
 # Variables
@@ -101,7 +101,7 @@ btn_path_image.pack(**ipadding, padx=30, pady=(15, 5), fill='x')
 label_path_folder_image = Label(
     window,
     text='',
-    bg='white',
+    bg='#fff18c',
     fg='green',
     font=font_bold
 )
@@ -124,7 +124,7 @@ btn_path_image.pack(**ipadding, **padd_button, fill='x')
 label_path_folder_save = Label(
     window,
     text='',
-    bg='white',
+    bg='#fff18c',
     fg='green',
     font=font_bold
 )
@@ -195,6 +195,23 @@ btn_exit = Button(
     command=window.quit)
 
 btn_exit.pack(**ipadding, **padd_button)
+
+# Informations
+label_author = Label(
+    window,
+    text='Desenvolvido por Bruna Gonçalves',
+    bg='#000000',
+    fg='white',
+    font=font_bold
+)
+
+label_author.pack(
+    ipady=3,
+    pady=(10, 0),
+    anchor='s',
+    expand=True,
+    fill='x'
+)
 
 # Start window
 window.mainloop()
