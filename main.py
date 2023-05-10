@@ -23,7 +23,7 @@ def resize_image_report():
     files = os.listdir(path_folder_image)
     total_files = len(files)
 
-    progress_label.config(text=f'Redimensionando imagens para relatórios')
+    progress_label.config(text=f'Redimensionando imagens')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
@@ -37,7 +37,7 @@ def resize_image_report():
             text=f'Redimensionando imagem {image+1}/{total_files}')
         window.update()
 
-    progress_label.config(text=f'Redimensionamento relatórios concluído!')
+    progress_label.config(text=f'Redimensionamento relatórios (340x340 JPG) concluído!')
 
 
 def resize_image_ipad():
@@ -47,7 +47,7 @@ def resize_image_ipad():
     files = os.listdir(path_folder_image)
     total_files = len(files)
 
-    progress_label.config(text=f'Redimensionando imagens para Ipad')
+    progress_label.config(text=f'Redimensionando imagens')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
@@ -60,7 +60,7 @@ def resize_image_ipad():
             text=f'Redimensionando imagem {image+1}/{total_files}')
         window.update()
 
-    progress_label.config(text=f'Redimensionamento Ipad concluído!')
+    progress_label.config(text=f'Redimensionamento Ipad Ipad (600x600 PNG) concluído!')
 
 
 # Create screen
@@ -151,7 +151,7 @@ height_entry.pack(**ipadding, **padd_button)
 btn_resize = Button(
     window,
     image=icon_resize,
-    text='  Redimensionar para Relatórios',
+    text='  Redimensionar para Relatórios (340x340 JPG)',
     font=font_bold,
     compound='left',
     command=resize_image_report
@@ -163,7 +163,7 @@ btn_resize.pack(**ipadding, **padd_button, fill='x')
 btn_resize = Button(
     window,
     image=icon_resize,
-    text='  Redimensionar para Ipad',
+    text='  Redimensionar para Ipad (600x600 PNG)',
     font=font_bold,
     compound='left',
     command=resize_image_ipad
