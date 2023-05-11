@@ -1,6 +1,6 @@
 import os
 from tkinter import *
-from tkinter import filedialog, ttk, font
+from tkinter import filedialog, ttk, font, messagebox
 from PIL import Image
 
 
@@ -23,7 +23,7 @@ def resize_image_report():
     files = os.listdir(path_folder_image)
     total_files = len(files)
 
-    progress_label.config(text=f'Redimensionando imagens')
+    progress_label.config(text='Redimensionando imagens')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
@@ -37,7 +37,8 @@ def resize_image_report():
             text=f'Redimensionando imagem {image+1}/{total_files}')
         window.update()
 
-    progress_label.config(text=f'Redimensionamento relatórios (340x340 JPG) concluído!')
+    progress_label.config(
+        text='Redimensionamento relatórios (340x340 JPG) concluído!')
 
 
 def resize_image_ipad():
@@ -47,27 +48,38 @@ def resize_image_ipad():
     files = os.listdir(path_folder_image)
     total_files = len(files)
 
-    progress_label.config(text=f'Redimensionando imagens')
+    progress_label.config(text='Redimensionando imagens')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
-        if file.endswith(".png"):
+        if file.endswith('.png'):
             images = Image.open(os.path.join(path_folder_image, file))
             images = images.resize((width, height))
             images.save(os.path.join(path_folder_save, file))
-        progress_bar.step(1)
-        progress_label.config(
-            text=f'Redimensionando imagem {image+1}/{total_files}')
-        window.update()
+            progress_bar.step(1)
+            progress_label.config(
+                text=f'Redimensionando imagem {image+1}/{total_files}')
+            window.update()
 
-    progress_label.config(text=f'Redimensionamento Ipad Ipad (600x600 PNG) concluído!')
+            progress_label.config(
+                text='Redimensionamento Ipad Ipad (600x600 PNG) concluído!')
+        else:
+            messagebox.showerror(
+                'Deu Ruim!', 'Na pasta contém imagens JPG, e não podem ser redimensionadas, o Ipad aceita apenas PNG!')
+            break
 
 
 # Create screen
 window = Tk()
 window.iconphoto(False, PhotoImage(file='./icons/icon-app.png'))
 window.title('CM Otimiza - BETA')
-window.geometry('500x580')
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+WINDOW_WIDTH = 500
+WINDOW_HEIGHT = 580
+w = int((screen_width - WINDOW_WIDTH) / 2)
+h = int((screen_height - WINDOW_HEIGHT) / 2)
+window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{w}+{h}')
 window.resizable(False, False)
 
 # Variables
@@ -200,7 +212,7 @@ btn_exit.pack(**ipadding, **padd_button)
 label_author = Label(
     window,
     text='Desenvolvido por Bruna Gonçalves',
-    bg='#000000',
+    bg='#413d3d',
     fg='white',
     font=font_bold
 )
