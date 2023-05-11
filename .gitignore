@@ -1,6 +1,4 @@
-/rename
-/teste
-/to-do
-/done
-/bkp
 .vscode
+/build
+/dist
+OtimizaCM.spec
