@@ -57,11 +57,11 @@ def resize_image_ipad():
             images = Image.open(os.path.join(path_folder_image, file))
             images = images.resize((width, height))
             images.save(os.path.join(path_folder_save, file))
-            progress_bar.step(1)
+            progress_bar.step(2)
             progress_label.config(
                 text=f'Redimensionando imagem {image+1}/{total_files}')
+            
             window.update()
-
             progress_label.config(
                 text='Redimensionamento Ipad Ipad (600x600 PNG) concluído!')
         else:
@@ -87,12 +87,9 @@ def rename_image():
         else:
             continue
 
-        shutil.copy2(os.path.join(path_folder_image, file),
-                     os.path.join(path_folder_save, new_name))
-
+        shutil.copy2(os.path.join(path_folder_image, file),os.path.join(path_folder_save, new_name))
         progress_bar.step(1)
-        progress_label.config(
-            text=f'Renomeando imagens {image+1}/{total_files}')
+        progress_label.config(text=f'Renomeando imagens {image+1}/{total_files}')
         window.update()
         progress_label.config(text='Imagens renomeadas com sucesso!')
 
