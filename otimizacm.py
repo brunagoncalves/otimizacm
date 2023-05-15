@@ -5,34 +5,34 @@ from tkinter import filedialog, ttk, font, messagebox
 from PIL import Image
 
 
-def select_path_image():
-    global path_folder_image
-    path_folder_image = filedialog.askdirectory()
-    label_path_folder_image.config(text=path_folder_image)
+def select_image_folder():
+    global path_image_folder
+    path_image_folder = filedialog.askdirectory()
+    label_image_folder.config(text=path_image_folder)
 
 
-def select_path_save():
-    global path_folder_save
-    path_folder_save = filedialog.askdirectory()
-    label_path_folder_save.config(text=path_folder_save)
+def select_save_folder():
+    global path_save_folder
+    path_save_folder = filedialog.askdirectory()
+    label_save_folder.config(text=path_save_folder)
 
 
 def resize_image_report():
     width = 340
     height = 340
 
-    files = os.listdir(path_folder_image)
+    files = os.listdir(path_image_folder)
     total_files = len(files)
 
     progress_label.config(text='Redimensionando imagens')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
-        if file.endswith(".jpg") or file.endswith(".png"):
-            images = Image.open(os.path.join(path_folder_image, file))
+        if file.endswith('.jpg') or file.endswith('.png') or file.endswith('.jpeg'):
+            images = Image.open(os.path.join(path_image_folder, file))
             images = images.resize((width, height))
             images.convert('RGB').save(os.path.join(
-                path_folder_save, file.replace(".png", ".jpg")))
+                path_save_folder, file.replace(".png", ".jpg") or file.replace(".jpeg", ".jpg")))
         progress_bar.step(1)
         progress_label.config(
             text=f'Redimensionando imagem {image+1}/{total_files}')
@@ -42,11 +42,11 @@ def resize_image_report():
         text='Redimensionamento relatórios (340x340 JPG) concluído!')
 
 
-def resize_image_ipad():
+def resize_image_mobile():
     width = 600
     height = 600
 
-    files = os.listdir(path_folder_image)
+    files = os.listdir(path_image_folder)
     total_files = len(files)
 
     progress_label.config(text='Redimensionando imagens')
@@ -54,13 +54,13 @@ def resize_image_ipad():
 
     for image, file in enumerate(files):
         if file.endswith('.png'):
-            images = Image.open(os.path.join(path_folder_image, file))
+            images = Image.open(os.path.join(path_image_folder, file))
             images = images.resize((width, height))
-            images.save(os.path.join(path_folder_save, file))
+            images.save(os.path.join(path_save_folder, file))
             progress_bar.step(2)
             progress_label.config(
                 text=f'Redimensionando imagem {image+1}/{total_files}')
-            
+
             window.update()
             progress_label.config(
                 text='Redimensionamento Ipad Ipad (600x600 PNG) concluído!')
@@ -70,8 +70,11 @@ def resize_image_ipad():
             break
 
 
-def rename_image():
-    files = os.listdir(path_folder_image)
+def rename_image_report():
+    width = 340
+    height = 340
+
+    files = os.listdir(path_image_folder)
     total_files = len(files)
 
     progress_label.config(text='Redimensionando imagens')
@@ -87,164 +90,96 @@ def rename_image():
         else:
             continue
 
-        shutil.copy2(os.path.join(path_folder_image, file),os.path.join(path_folder_save, new_name))
+        shutil.copy2(os.path.join(path_image_folder, file),
+                     os.path.join(path_save_folder, new_name))
+        new_name.resize((width, height)).convert('RGB').save(
+            os.path.join(path_save_folder, file.replace(".png", ".jpg")))
         progress_bar.step(1)
-        progress_label.config(text=f'Renomeando imagens {image+1}/{total_files}')
+        progress_label.config(
+            text=f'Renomeando imagens {image+1}/{total_files}')
         window.update()
         progress_label.config(text='Imagens renomeadas com sucesso!')
 
 
-# Create screen
+# Create window tkinter
 window = Tk()
-window.iconphoto(False, PhotoImage(file='./icons/icon-app.png'))
-window.title('CM Otimiza - BETA')
+window.title('OtimizaCM')
+window.iconphoto(True, PhotoImage(file='./icons/icon-app.png'))
+WIDTH = 600
+HEIGHT = 600
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
-WINDOW_WIDTH = 500
-WINDOW_HEIGHT = 580
-w = int((screen_width - WINDOW_WIDTH) / 2)
-h = int((screen_height - WINDOW_HEIGHT) / 2)
-window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{w}+{h}')
-window.resizable(False, False)
-
-# Variables
-ipadding = {'ipadx': 3, 'ipady': 3}
-padd_button = {'padx': 30, 'pady': 10}
-
-# Fonts
-font_bold = font.Font(
-    size=9,
-    weight='bold'
-)
+screen_center = '%dx%d+%d+%d' % (WIDTH, HEIGHT,
+                                 (screen_width - WIDTH) / 2, (screen_height - HEIGHT) / 2)
+window.geometry(screen_center)
+window.resizable(0, 0)
 
 # Icons
 icon_folder = PhotoImage(file='./icons/folder-open.png')
 icon_exit = PhotoImage(file='./icons/exit.png')
 icon_resize = PhotoImage(file='./icons/resize.png')
 
-# Select folder image
-btn_path_image = Button(
-    window,
-    image=icon_folder,
-    text='  O que você quer redimensionar?',
-    compound='left',
-    font=font_bold,
-    command=select_path_image
-)
+# Set default font
+font_default = font.Font(family='Helvetica', size=9, weight='bold')
+font.families()
+window.option_add('*Font', font_default)
 
-btn_path_image.pack(**ipadding, padx=30, pady=(15, 5), fill='x')
+# Styles
+ipadding = {'ipadx': 5, 'ipady': 5}
+padding = {'padx': 10, 'pady': 5}
 
-# Label folder images
-label_path_folder_image = Label(
-    window,
-    text='',
-    bg='#fff18c',
-    fg='green',
-    font=font_bold
-)
+# Label info image folder
+label_info_folder = Label(
+    window, text='Onde esta a pasta para Redimensionar ou Renomear?', justify='left')
+label_info_folder.place(x=10, y=10)
 
-label_path_folder_image.pack(**ipadding, **padd_button, fill='x')
+label_info_folder = Label(
+    window, text='Em que pasta deseja salvar as imagens?', justify='left')
+label_info_folder.place(x=10, y=86)
 
-# Select folder save
-btn_path_image = Button(
-    window,
-    image=icon_folder,
-    text='  Onde deseja salvar?',
-    compound='left',
-    font=font_bold,
-    command=select_path_save
-)
+# Button select image folder
+btn_image_folder = Button(window, image=icon_folder,
+                          command=select_image_folder)
+btn_image_folder.place(x=10, y=40, width=40, height=40)
 
-btn_path_image.pack(**ipadding, **padd_button, fill='x')
+label_image_folder = Label(window, text='', justify='left', bg='#fff18c')
+label_image_folder.place(x=60, y=47)
 
-# Label folder save
-label_path_folder_save = Label(
-    window,
-    text='',
-    bg='#fff18c',
-    fg='green',
-    font=font_bold
-)
+# Button select save folder
+btn_save_folder = Button(window, image=icon_folder, command=select_save_folder)
+btn_save_folder.place(x=10, y=117, width=40, height=40)
 
-label_path_folder_save.pack(**ipadding, **padd_button, fill='x')
+label_save_folder = Label(window, text='', justify='left', bg='#fff18c')
+label_save_folder.place(x=60, y=124)
 
-# Button resize
-btn_resize = Button(
-    window,
-    image=icon_resize,
-    text='  Redimensionar para Relatórios/Pronta Entrega (340x340 JPG)',
-    font=font_bold,
-    compound='left',
-    command=resize_image_report
-)
+# Label info button resize and rename
+label_info_btn = Label(window, text='Escolha a tarefa a ser realizada.')
+label_info_btn.place(x=10, y=164)
 
-btn_resize.pack(**ipadding, **padd_button, fill='x')
+# Buttons
+btn_resize_report = Button(
+    window, text='Redimensionar fotos paea relatórios (340x340 JPG)', command=resize_image_report)
+btn_resize_report.place(x=10, y=195)
 
-# Button resize ipad
-btn_resize = Button(
-    window,
-    image=icon_resize,
-    text='  Redimensionar para Ipad (600x600 PNG)',
-    font=font_bold,
-    compound='left',
-    command=resize_image_ipad
-)
+btn_resize_mobile = Button(
+    window, text='Redimensionar fotos paea relatórios (340x340 JPG)', command=resize_image_mobile)
+btn_resize_mobile.place(x=10, y=230)
 
-btn_resize.pack(**ipadding, **padd_button, fill='x')
-
-# Button rename
-btn_rename = Button(
-    window,
-    image=icon_resize,
-    text='  Renomear imagens para Relatórios/Pronto Entrega',
-    font=font_bold,
-    compound='left',
-    command=rename_image
-)
-
-btn_rename.pack(**ipadding, **padd_button, fill='x')
+btn_rename_report = Button(
+    window, text='Redimensionar fotos paea relatórios (340x340 JPG)', command=rename_image_report)
+btn_rename_report.place(x=10, y=266)
 
 # Progress Bar
 progress_bar = ttk.Progressbar(window, orient='horizontal')
-progress_bar.pack(**padd_button, fill='x')
+progress_bar.place(x=10, y=320)
 
 # Progress label
-progress_label = Label(
-    window,
-    text='',
-    fg='green',
-    font=font_bold
-)
-progress_label.pack(**ipadding, **padd_button)
+progress_label = Label(window, text='')
+progress_label.place(x=10, y=370)
 
-# Button exit
-btn_exit = Button(
-    window,
-    image=icon_exit,
-    text='  Fechar',
-    compound='left',
-    font=font_bold,
-    fg='red',
-    command=window.quit)
+# Author
+label_author = Label(window, text='Desenvolvido por Bruna Gonçalves')
+label_author.place(x=10, y=400)
 
-btn_exit.pack(**ipadding, **padd_button)
-
-# Informations
-label_author = Label(
-    window,
-    text='Desenvolvido por Bruna Gonçalves',
-    bg='#413d3d',
-    fg='white',
-    font=font_bold
-)
-
-label_author.pack(
-    ipady=3,
-    pady=(10, 0),
-    anchor='s',
-    expand=True,
-    fill='x'
-)
-
-# Start window
+# Start screen
 window.mainloop()
