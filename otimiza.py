@@ -17,90 +17,109 @@ def select_save_folder():
 
 
 def resize_image_report():
-    width = 340
-    height = 340
+    try:
+        width = 340
+        height = 340
 
-    files = os.listdir(path_image_folder)
-    total_files = len(files)
-    # progress_bar.config(maximum=total_files)
+        files = os.listdir(path_image_folder)
+        total_files = len(files)
+        # progress_bar.config(maximum=total_files)
 
-    for image, file in enumerate(files):
-        name_image, extensao = os.path.splitext(file)
-        extensao = extensao.lower()
+        for image, file in enumerate(files):
+            name_image, extensao = os.path.splitext(file)
+            extensao = extensao.lower()
 
-        if extensao in ['.jpg', '.jpeg', '.png']:
-            images = Image.open(os.path.join(path_image_folder, file))
-            images = images.resize((width, height), Image.LANCZOS)
-            images = images.convert('RGB').save(os.path.join(
-                path_save_folder, name_image + '.jpg'), 'JPEG')
+            if extensao in ['.jpg', '.jpeg', '.png']:
+                images = Image.open(os.path.join(path_image_folder, file))
+                images = images.resize((width, height), Image.LANCZOS)
+                images = images.convert('RGB').save(os.path.join(
+                    path_save_folder, name_image + '.jpg'), 'JPEG')
 
-        # progress_bar.step(1)
-        progress_label.config(
-            text=f'Redimensionando foto {image+1}/{total_files}')
-        app.update()
-        progress_label.config(
-            text='Fotos (340x340 JPG) redimensionadas com sucesso!')
-
-
-def resize_image_mobile():
-    width = 600
-    height = 600
-
-    files = os.listdir(path_image_folder)
-    total_files = len(files)
-    # progress_bar.config(maximum=total_files)
-
-    for image, file in enumerate(files):
-        if file.endswith('.png'):
-            images = Image.open(os.path.join(path_image_folder, file))
-            images = images.resize((width, height), Image.LANCZOS)
-            images.save(os.path.join(path_save_folder, file))
-            # progress_bar.step(2)
+            # progress_bar.step(1)
             progress_label.config(
                 text=f'Redimensionando foto {image+1}/{total_files}')
             app.update()
             progress_label.config(
-                text='Fotos Ipad (600x600) redimensionadas com Sucesso!')
-        else:
-            messagebox.showerror(
-                'Deu Ruim!', 'Para redimensionar (600x600 PNG), na pasta só deve conter fotos em formato PNG!')
-            break
+                text='Fotos (340x340 JPG) redimensionadas com sucesso!')
+    except NameError:
+        messagebox.showerror(
+            "Deu Ruim!", "Você precisa selecionar uma pasta!")
+    except ValueError as error:
+        messagebox.showerror("Erro", str(error))
+
+
+def resize_image_mobile():
+    try:
+        width = 600
+        height = 600
+
+        files = os.listdir(path_image_folder)
+        total_files = len(files)
+        # progress_bar.config(maximum=total_files)
+
+        for image, file in enumerate(files):
+            if file.endswith('.png'):
+                images = Image.open(os.path.join(path_image_folder, file))
+                images = images.resize((width, height), Image.LANCZOS)
+                images.save(os.path.join(path_save_folder, file))
+                # progress_bar.step(2)
+                progress_label.config(
+                    text=f'Redimensionando foto {image+1}/{total_files}')
+                app.update()
+                progress_label.config(
+                    text='Fotos Ipad (600x600) redimensionadas com Sucesso!')
+            else:
+                messagebox.showerror(
+                    'Deu Ruim!', 'Para redimensionar (600x600 PNG), na pasta só deve conter fotos em formato PNG!')
+                break
+    except NameError:
+        messagebox.showerror(
+            "Deu Ruim!", "Você precisa selecionar uma pasta!")
+    except ValueError as error:
+        messagebox.showerror("Erro", str(error))
 
 
 def rename_image_report():
-    width = 340
-    height = 340
+    try:
+        width = 340
+        height = 340
 
-    files = os.listdir(path_image_folder)
-    total_files = len(files)
-    # progress_bar.config(maximum=total_files)
+        files = os.listdir(path_image_folder)
+        total_files = len(files)
+        # progress_bar.config(maximum=total_files)
 
-    for image, file in enumerate(files):
-        path_image = os.path.join(path_image_folder, file)
+        for image, file in enumerate(files):
+            path_image = os.path.join(path_image_folder, file)
 
-        if len(file) == 16:
-            new_name = file[:10] + file[12:]
-        elif len(file) == 17:
-            new_name = file[:11] + file[13:]
-        elif len(file) == 18:
-            new_name = file[:12] + file[14:]
-        else:
-            messagebox.showerror(
-                'Deu Ruim!', 'JPEG formato não aceito!')
-            break
+            if len(file) == 16:
+                new_name = file[:10] + file[12:]
+            elif len(file) == 17:
+                new_name = file[:11] + file[13:]
+            elif len(file) == 18:
+                new_name = file[:12] + file[14:]
+            else:
+                messagebox.showerror(
+                    'Deu Ruim!', 'JPEG formato não aceito!')
+                break
 
-        novo_caminho = os.path.join(path_image_folder, new_name)
+            novo_caminho = os.path.join(path_image_folder, new_name)
 
-        with Image.open(path_image) as img:
-            img = img.resize((width, height))
-            img = img.convert('RGB')
-            img.save(novo_caminho, 'JPEG')
+            with Image.open(path_image) as img:
+                img = img.resize((width, height))
+                img = img.convert('RGB')
+                img.save(novo_caminho, 'JPEG')
 
-        # progress_bar.step(1)
-        progress_label.config(text=f'Renomeando foto {image+1}/{total_files}')
-        app.update()
-        progress_label.config(
-            text='Fotos (340x340 JPG) renomeadas com sucesso!')
+            # progress_bar.step(1)
+            progress_label.config(
+                text=f'Renomeando foto {image+1}/{total_files}')
+            app.update()
+            progress_label.config(
+                text='Fotos (340x340 JPG) renomeadas com sucesso!')
+    except NameError:
+        messagebox.showerror(
+            "Deu Ruim!", "Você precisa selecionar uma pasta!")
+    except ValueError as error:
+        messagebox.showerror("Erro", str(error))
 
 
 # Configuration App
