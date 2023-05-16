@@ -23,8 +23,6 @@ def resize_image_report():
 
     files = os.listdir(path_image_folder)
     total_files = len(files)
-
-    progress_label.config(text='Redimensionando imagens')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
@@ -39,10 +37,10 @@ def resize_image_report():
 
         progress_bar.step(1)
         progress_label.config(
-            text=f'Redimensionando imagem {image+1}/{total_files}')
+            text=f'Redimensionando foto {image+1}/{total_files}')
         app.update()
         progress_label.config(
-            text='Redimensionamento relatórios (340x340 JPG) concluído!')
+            text='Fotos (340x340 JPG) redimensionadas com sucesso!')
 
 
 def resize_image_mobile():
@@ -51,8 +49,6 @@ def resize_image_mobile():
 
     files = os.listdir(path_image_folder)
     total_files = len(files)
-
-    progress_label.config(text='Redimensionando imagens')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
@@ -62,13 +58,13 @@ def resize_image_mobile():
             images.save(os.path.join(path_save_folder, file))
             progress_bar.step(2)
             progress_label.config(
-                text=f'Redimensionando imagem {image+1}/{total_files}')
+                text=f'Redimensionando foto {image+1}/{total_files}')
             app.update()
             progress_label.config(
                 text='Fotos Ipad (600x600) redimensionadas com Sucesso!')
         else:
             messagebox.showerror(
-                'Deu Ruim!', 'Na pasta só deve conter imagens em formato PNG!')
+                'Deu Ruim!', 'Para redimensionar (600x600 PNG), na pasta só deve conter fotos em formato PNG!')
             break
 
 
@@ -78,11 +74,11 @@ def rename_image_report():
 
     files = os.listdir(path_image_folder)
     total_files = len(files)
-
-    progress_label.config(text='Redimensionando imagens')
     progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
+        path_image = os.path.join(path_image_folder, file)
+
         if len(file) == 16:
             new_name = file[:10] + file[12:]
         elif len(file) == 17:
@@ -92,23 +88,31 @@ def rename_image_report():
         else:
             continue
 
-        shutil.copy2(os.path.join(path_image_folder, file),
-                     os.path.join(path_save_folder, new_name))
-        new_name.resize((width, height)).convert('RGB').save(
-            os.path.join(path_save_folder, file.replace(".png", ".jpg")))
+        novo_caminho = os.path.join(path_image_folder, new_name)
+
+        with Image.open(path_image) as img:
+            img = img.resize((width, height))
+            img = img.convert('RGB')
+            img.save(novo_caminho, 'JPEG')
+
+        # shutil.copy2(os.path.join(path_image_folder, file),
+        #              os.path.join(path_save_folder, new_name))
+        # images = new_name.resize((width, height))
+        # images = images.convert('RGB').save(os.path.join(
+        #     path_save_folder, file.replace(".png", ".jpg")))
+
         progress_bar.step(1)
-        progress_label.config(
-            text=f'Renomeando imagem {image+1}/{total_files}')
+        progress_label.config(text=f'Renomeando foto {image+1}/{total_files}')
         app.update()
         progress_label.config(
-            text='Imagens para relatórios renomeadas (340x340 JPG) concluído!')
+            text='Fotos (340x340 JPG) renomeadas com sucesso!')
 
 
 # Configuration App
 app = Tk()
 app.title('Otimiza CM - BETA')
 app.iconphoto(True, PhotoImage(file='./icons/icon-app.png'))
-app.geometry('500x600')
+app.geometry('500x470')
 app.resizable(False, False)
 
 # Icons
@@ -126,7 +130,7 @@ ipadding = {'ipadx': 5, 'ipady': 5}
 
 # Label information select folder image
 laber_info_folder = Label(
-    app, text='Selecione a pasta onde as fotos para redimensionar.')
+    app, text='Selecione a pasta onde estão as fotos para redimensionar.')
 laber_info_folder.pack(**ipadding, anchor='w')
 
 frame_image_folder = Frame(app)
@@ -170,23 +174,27 @@ frame_action = Frame(app)
 frame_action.pack()
 
 btn_resize_report = Button(
-    frame_action, text='Redimensionar fotos para relatórios (340x340 JPG)', command=resize_image_report)
-btn_resize_report.pack(**ipadding, fill='x')
+    frame_action, text='  Redimensionar fotos para relatórios (340x340 JPG)', image=icon_resize, compound='left', command=resize_image_report, anchor='w')
+btn_resize_report.pack(**ipadding, fill='x', pady=5)
 
 btn_resize_mobile = Button(
-    frame_action, text='Redimensionar fotos para Ipad (600x600 PNG)', command=resize_image_mobile)
-btn_resize_mobile.pack(**ipadding, fill='x')
+    frame_action, text='  Redimensionar fotos para Ipad (600x600 PNG)', image=icon_resize, compound='left', command=resize_image_mobile, anchor='w')
+btn_resize_mobile.pack(**ipadding, fill='x', pady=5)
 
 btn_rename_report = Button(
-    frame_action, text='Renomear fotos para relatórios (340x340 JPG)', command=rename_image_report)
-btn_rename_report.pack(**ipadding, fill='x')
+    frame_action, text='  Renomear fotos para relatórios (340x340 JPG)', image=icon_resize, compound='left', command=rename_image_report, anchor='w')
+btn_rename_report.pack(**ipadding, fill='x', pady=5)
 
 # Progress Bar
 progress_bar = ttk.Progressbar(app, orient='horizontal')
 progress_bar.pack(padx=50, pady=10, fill='x')
 
 # Progress label
-progress_label = Label(app, text='')
-progress_label.pack(**ipadding)
+progress_label = Label(app, text='', fg='green')
+progress_label.pack(**ipadding, pady=10)
+
+# Author
+label_author = Label(app, text='Desenvolvido por Bruna Gonçalves', bg='gray')
+label_author.pack(**ipadding, fill='x', expand=True)
 
 app.mainloop()
