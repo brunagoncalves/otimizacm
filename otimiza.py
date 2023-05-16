@@ -1,6 +1,6 @@
 import os
 from tkinter import *
-from tkinter import filedialog, ttk, font, messagebox
+from tkinter import filedialog, font, messagebox
 from PIL import Image
 
 
@@ -22,8 +22,8 @@ def resize_image_report():
         height = 340
 
         files = os.listdir(path_image_folder)
+        path_save = path_save_folder
         total_files = len(files)
-        # progress_bar.config(maximum=total_files)
 
         for image, file in enumerate(files):
             name_image, extensao = os.path.splitext(file)
@@ -33,9 +33,8 @@ def resize_image_report():
                 images = Image.open(os.path.join(path_image_folder, file))
                 images = images.resize((width, height), Image.LANCZOS)
                 images = images.convert('RGB').save(os.path.join(
-                    path_save_folder, name_image + '.jpg'), 'JPEG')
+                    path_save, name_image + '.jpg'), 'JPEG')
 
-            # progress_bar.step(1)
             progress_label.config(
                 text=f'Redimensionando foto {image+1}/{total_files}')
             app.update()
@@ -54,15 +53,14 @@ def resize_image_mobile():
         height = 600
 
         files = os.listdir(path_image_folder)
+        path_save = path_save_folder
         total_files = len(files)
-        # progress_bar.config(maximum=total_files)
 
         for image, file in enumerate(files):
             if file.endswith('.png'):
-                images = Image.open(os.path.join(path_image_folder, file))
-                images = images.resize((width, height), Image.LANCZOS)
-                images.save(os.path.join(path_save_folder, file))
-                # progress_bar.step(2)
+                img = Image.open(os.path.join(path_image_folder, file))
+                img = img.resize((width, height), Image.LANCZOS)
+                img.save(os.path.join(path_save, file))
                 progress_label.config(
                     text=f'Redimensionando foto {image+1}/{total_files}')
                 app.update()
@@ -70,8 +68,7 @@ def resize_image_mobile():
                     text='Fotos Ipad (600x600) redimensionadas com Sucesso!')
             else:
                 messagebox.showerror(
-                    'Deu Ruim!', 'Para redimensionar (600x600 PNG), na pasta só deve conter fotos em formato PNG!')
-                break
+                    'Deu Ruim!', 'Na paste deve conter apenas fotos no formato PNG!')
     except NameError:
         messagebox.showerror(
             "Deu Ruim!", "Você precisa selecionar uma pasta!")
@@ -85,31 +82,37 @@ def rename_image_report():
         height = 340
 
         files = os.listdir(path_image_folder)
+        path_save = path_save_folder
         total_files = len(files)
-        # progress_bar.config(maximum=total_files)
 
         for image, file in enumerate(files):
-            path_image = os.path.join(path_image_folder, file)
-
-            if len(file) == 16:
+            if len(file) == 16 and file.endswith('.png') or len(file) == 16 and file.endswith('.jpg'):
                 new_name = file[:10] + file[12:]
-            elif len(file) == 17:
+            elif len(file) == 17 and file.endswith('.png') or len(file) == 17 and file.endswith('.jpg'):
                 new_name = file[:11] + file[13:]
-            elif len(file) == 18:
+            elif len(file) == 18 and file.endswith('.png') or len(file) == 18 and file.endswith('.jpg'):
+                new_name = file[:12] + file[14:]
+            elif len(file) == 17 and file.endswith('.jpeg'):
+                new_name = file[:10] + file[12:]
+            elif len(file) == 18 and file.endswith('.jpeg'):
+                new_name = file[:11] + file[13:]
+            elif len(file) == 19 and file.endswith('.jpeg'):
                 new_name = file[:12] + file[14:]
             else:
-                messagebox.showerror(
-                    'Deu Ruim!', 'JPEG formato não aceito!')
-                break
+                continue
 
-            novo_caminho = os.path.join(path_image_folder, new_name)
+            with Image.open(os.path.join(path_image_folder, file)) as img:
+                img = img.resize((width, height), Image.LANCZOS)
 
-            with Image.open(path_image) as img:
-                img = img.resize((width, height))
-                img = img.convert('RGB')
-                img.save(novo_caminho, 'JPEG')
+                if file.endswith('png'):
+                    img.convert('RGB').save(os.path.join(
+                        path_save, new_name.replace('.png', '.jpg')))
+                elif file.endswith('jpeg'):
+                    img.convert('RGB').save(os.path.join(
+                        path_save, new_name.replace('.jpeg', '.jpg')))
+                else:
+                    img.convert('RGB').save(os.path.join(path_save, new_name))
 
-            # progress_bar.step(1)
             progress_label.config(
                 text=f'Renomeando foto {image+1}/{total_files}')
             app.update()
@@ -186,7 +189,7 @@ label_save_folder.pack(**ipadding, fill='x', expand=True, padx=10, pady=3)
 
 # Select the task
 label_task = Label(
-    app, text='Para realizar uma terefa, clique no botão.')
+    app, text='Qual tarefa você deseja realizar? Clique no botão apenas se tiver certeza!')
 label_task.pack(**ipadding, anchor='w')
 
 # Buttons select task
