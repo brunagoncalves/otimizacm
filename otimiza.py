@@ -1,5 +1,4 @@
 import os
-import shutil
 from tkinter import *
 from tkinter import filedialog, ttk, font, messagebox
 from PIL import Image
@@ -23,7 +22,7 @@ def resize_image_report():
 
     files = os.listdir(path_image_folder)
     total_files = len(files)
-    progress_bar.config(maximum=total_files)
+    # progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
         name_image, extensao = os.path.splitext(file)
@@ -35,7 +34,7 @@ def resize_image_report():
             images = images.convert('RGB').save(os.path.join(
                 path_save_folder, name_image + '.jpg'), 'JPEG')
 
-        progress_bar.step(1)
+        # progress_bar.step(1)
         progress_label.config(
             text=f'Redimensionando foto {image+1}/{total_files}')
         app.update()
@@ -49,14 +48,14 @@ def resize_image_mobile():
 
     files = os.listdir(path_image_folder)
     total_files = len(files)
-    progress_bar.config(maximum=total_files)
+    # progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
         if file.endswith('.png'):
             images = Image.open(os.path.join(path_image_folder, file))
             images = images.resize((width, height), Image.LANCZOS)
             images.save(os.path.join(path_save_folder, file))
-            progress_bar.step(2)
+            # progress_bar.step(2)
             progress_label.config(
                 text=f'Redimensionando foto {image+1}/{total_files}')
             app.update()
@@ -74,7 +73,7 @@ def rename_image_report():
 
     files = os.listdir(path_image_folder)
     total_files = len(files)
-    progress_bar.config(maximum=total_files)
+    # progress_bar.config(maximum=total_files)
 
     for image, file in enumerate(files):
         path_image = os.path.join(path_image_folder, file)
@@ -86,7 +85,9 @@ def rename_image_report():
         elif len(file) == 18:
             new_name = file[:12] + file[14:]
         else:
-            continue
+            messagebox.showerror(
+                'Deu Ruim!', 'JPEG formato não aceito!')
+            break
 
         novo_caminho = os.path.join(path_image_folder, new_name)
 
@@ -95,13 +96,7 @@ def rename_image_report():
             img = img.convert('RGB')
             img.save(novo_caminho, 'JPEG')
 
-        # shutil.copy2(os.path.join(path_image_folder, file),
-        #              os.path.join(path_save_folder, new_name))
-        # images = new_name.resize((width, height))
-        # images = images.convert('RGB').save(os.path.join(
-        #     path_save_folder, file.replace(".png", ".jpg")))
-
-        progress_bar.step(1)
+        # progress_bar.step(1)
         progress_label.config(text=f'Renomeando foto {image+1}/{total_files}')
         app.update()
         progress_label.config(
@@ -112,7 +107,13 @@ def rename_image_report():
 app = Tk()
 app.title('Otimiza CM - BETA')
 app.iconphoto(True, PhotoImage(file='./icons/icon-app.png'))
-app.geometry('500x470')
+WIDTH = 500
+HEIGHT = 500
+screenwidth = app.winfo_screenwidth()
+screenheight = app.winfo_screenheight()
+alignstr = '%dx%d+%d+%d' % (WIDTH, HEIGHT,
+                            (screenwidth - WIDTH) / 2, (screenheight - HEIGHT) / 2)
+app.geometry(alignstr)
 app.resizable(False, False)
 
 # Icons
@@ -186,15 +187,20 @@ btn_rename_report = Button(
 btn_rename_report.pack(**ipadding, fill='x', pady=5)
 
 # Progress Bar
-progress_bar = ttk.Progressbar(app, orient='horizontal')
-progress_bar.pack(padx=50, pady=10, fill='x')
+# progress_bar = ttk.Progressbar(app, orient='horizontal')
+# progress_bar.pack(padx=50, pady=10, fill='x')
 
 # Progress label
 progress_label = Label(app, text='', fg='green')
 progress_label.pack(**ipadding, pady=10)
 
+# Button exit
+btn_exit = Button(app, text='  Fechar', image=icon_exit,
+                  compound='left', anchor='w', command=app.quit)
+btn_exit.pack(**ipadding, pady=10,)
+
 # Author
 label_author = Label(app, text='Desenvolvido por Bruna Gonçalves', bg='gray')
-label_author.pack(**ipadding, fill='x', expand=True)
+label_author.pack(**ipadding, fill='x', expand=True, anchor='s')
 
 app.mainloop()
