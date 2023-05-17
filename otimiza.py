@@ -39,10 +39,10 @@ def resize_image_report():
                 text=f'Redimensionando foto {image+1}/{total_files}')
             app.update()
             progress_label.config(
-                text='Fotos (340x340 JPG) redimensionadas com sucesso!')
+                text='Fotos (340x340 JPG) redimensionadas com SUCESSO!')
     except NameError:
         messagebox.showerror(
-            "Deu Ruim!", "Você precisa selecionar uma pasta!")
+            'Deu Ruim!", "Ops! Você não selecionou uma pasta!)')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
@@ -65,13 +65,14 @@ def resize_image_mobile():
                     text=f'Redimensionando foto {image+1}/{total_files}')
                 app.update()
                 progress_label.config(
-                    text='Fotos Ipad (600x600) redimensionadas com Sucesso!')
+                    text='Fotos Ipad (600x600 PNG) redimensionadas com SUCESSO!')
             else:
                 messagebox.showerror(
-                    'Deu Ruim!', 'Na paste deve conter apenas fotos no formato PNG!')
+                    'Deu Ruim!', 'Apenas fotos no formato PNG são aceitas!')
+                break
     except NameError:
         messagebox.showerror(
-            "Deu Ruim!", "Você precisa selecionar uma pasta!")
+            'Deu Ruim!", "Ops! Você não selecionou uma pasta!)')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
@@ -117,10 +118,10 @@ def rename_image_report():
                 text=f'Renomeando foto {image+1}/{total_files}')
             app.update()
             progress_label.config(
-                text='Fotos (340x340 JPG) renomeadas com sucesso!')
+                text='Fotos (340x340 JPG) renomeadas com SUCESSO!')
     except NameError:
         messagebox.showerror(
-            "Deu Ruim!", "Você precisa selecionar uma pasta!")
+            'Deu Ruim!", "Ops! Você não selecionou uma pasta!)')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
