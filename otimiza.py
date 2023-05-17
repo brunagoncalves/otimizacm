@@ -42,7 +42,7 @@ def resize_image_report():
                 text='Fotos (340x340 JPG) redimensionadas com SUCESSO!')
     except NameError:
         messagebox.showerror(
-            'Deu Ruim!", "Ops! Você não selecionou uma pasta!)')
+            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!)')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
@@ -69,10 +69,11 @@ def resize_image_mobile():
             else:
                 messagebox.showerror(
                     'Deu Ruim!', 'Apenas fotos no formato PNG são aceitas!')
+                progress_label_error.config(text='Operação não realizada!')
                 break
     except NameError:
         messagebox.showerror(
-            'Deu Ruim!", "Ops! Você não selecionou uma pasta!)')
+            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!)')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
@@ -121,7 +122,7 @@ def rename_image_report():
                 text='Fotos (340x340 JPG) renomeadas com SUCESSO!')
     except NameError:
         messagebox.showerror(
-            'Deu Ruim!", "Ops! Você não selecionou uma pasta!)')
+            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!)')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
@@ -131,7 +132,7 @@ app = Tk()
 app.title('Otimiza CM - BETA')
 app.iconphoto(True, PhotoImage(file='./icons/icon-app.png'))
 WIDTH = 500
-HEIGHT = 500
+HEIGHT = 550
 screenwidth = app.winfo_screenwidth()
 screenheight = app.winfo_screenheight()
 alignstr = '%dx%d+%d+%d' % (WIDTH, HEIGHT,
@@ -209,13 +210,13 @@ btn_rename_report = Button(
     frame_action, text='  Renomear fotos para relatórios (340x340 JPG)', image=icon_resize, compound='left', command=rename_image_report, anchor='w')
 btn_rename_report.pack(**ipadding, fill='x', pady=5)
 
-# Progress Bar
-# progress_bar = ttk.Progressbar(app, orient='horizontal')
-# progress_bar.pack(padx=50, pady=10, fill='x')
-
-# Progress label
+# Progress label Ok
 progress_label = Label(app, text='', fg='green')
 progress_label.pack(**ipadding, pady=10)
+
+# Progress label Error
+progress_label_error = Label(app, text='', fg='red')
+progress_label_error.pack(**ipadding, pady=10)
 
 # Button exit
 btn_exit = Button(app, text='  Fechar', image=icon_exit,
