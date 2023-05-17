@@ -42,7 +42,7 @@ def resize_image_report():
                 text='Fotos (340x340 JPG) redimensionadas com SUCESSO!')
     except NameError:
         messagebox.showerror(
-            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!)')
+            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
@@ -73,7 +73,7 @@ def resize_image_mobile():
                 break
     except NameError:
         messagebox.showerror(
-            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!)')
+            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
@@ -122,7 +122,7 @@ def rename_image_report():
                 text='Fotos (340x340 JPG) renomeadas com SUCESSO!')
     except NameError:
         messagebox.showerror(
-            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!)')
+            'Deu Ruim!', 'Ops! Você não selecionou uma pasta!')
     except ValueError as error:
         messagebox.showerror("Erro", str(error))
 
