@@ -1,7 +1,6 @@
 import os  # Allows access to operating system functionality
 from tkinter import *
 from tkinter import filedialog, font, messagebox
-from tkinter import ttk
 from PIL import Image  # Pillow - Lets you open, manipulate and save images
 
 
