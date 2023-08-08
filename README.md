@@ -1,6 +1,6 @@
 # OtimizaCM
 
-Sistema iniciante, no momento estou estudando Python, e essa foi a melhor opção que encontrei para poder praticar.
+Sistema desenvolvido para otimizar as tarefas como redimencionar, renomear e converter fotos para negativo.
 
 **This code has a lot to be improved!**
 
